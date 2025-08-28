@@ -56,7 +56,6 @@ class PathsScreen extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: const BottomNavBar(currentIndex: 1),
     );
   }
 

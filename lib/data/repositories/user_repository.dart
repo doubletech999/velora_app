@@ -1,4 +1,4 @@
-
+// lib/data/repositories/user_repository.dart
 import '../../core/constants/app_constants.dart';
 import '../models/user_model.dart';
 import '../services/api_service.dart';
@@ -28,9 +28,36 @@ class UserRepository {
     }
   }
 
-  Future<UserModel> login(String email, String password) async {
+  // تعديل في lib/data/repositories/user_repository.dart
+Future<UserModel> login(String email, String password) async {
+  try {
+    // للتطوير المحلي: تجاوز الاتصال بالإنترنت واستخدام بيانات وهمية
+    // final response = await _apiService.post('/auth/login', {
+    //   'email': email,
+    //   'password': password,
+    // });
+    
+    // استخدام بيانات وهمية بدلاً من الاتصال بالخادم
+    final token = 'dummy_token_${DateTime.now().millisecondsSinceEpoch}';
+    final user = UserModel(
+      id: 'user_1',
+      name: 'مستخدم فيلورا',
+      email: email,
+      createdAt: DateTime.now(),
+    );
+
+    await _storageService.saveString(AppConstants.userTokenKey, token);
+    
+    return user;
+  } catch (e) {
+    throw Exception('Login failed: ${e.toString()}');
+  }
+}
+
+  Future<UserModel> register(String name, String email, String password) async {
     try {
-      final response = await _apiService.post('/auth/login', {
+      final response = await _apiService.post('/auth/register', {
+        'name': name,
         'email': email,
         'password': password,
       });
@@ -42,7 +69,7 @@ class UserRepository {
       
       return user;
     } catch (e) {
-      throw Exception('Login failed: ${e.toString()}');
+      throw Exception('Registration failed: ${e.toString()}');
     }
   }
 
@@ -54,7 +81,7 @@ class UserRepository {
       throw Exception('Logout failed: ${e.toString()}');
     }
   }
-
+  
   Future<UserModel> updateProfile(UserModel user) async {
     try {
       final response = await _apiService.put('/user/profile', user.toJson());
